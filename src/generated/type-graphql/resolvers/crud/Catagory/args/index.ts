@@ -1,0 +1,12 @@
+export { AggregateCatagoryArgs } from "./AggregateCatagoryArgs";
+export { CreateCatagoryArgs } from "./CreateCatagoryArgs";
+export { CreateManyCatagoryArgs } from "./CreateManyCatagoryArgs";
+export { DeleteCatagoryArgs } from "./DeleteCatagoryArgs";
+export { DeleteManyCatagoryArgs } from "./DeleteManyCatagoryArgs";
+export { FindFirstCatagoryArgs } from "./FindFirstCatagoryArgs";
+export { FindManyCatagoryArgs } from "./FindManyCatagoryArgs";
+export { FindUniqueCatagoryArgs } from "./FindUniqueCatagoryArgs";
+export { GroupByCatagoryArgs } from "./GroupByCatagoryArgs";
+export { UpdateCatagoryArgs } from "./UpdateCatagoryArgs";
+export { UpdateManyCatagoryArgs } from "./UpdateManyCatagoryArgs";
+export { UpsertCatagoryArgs } from "./UpsertCatagoryArgs";

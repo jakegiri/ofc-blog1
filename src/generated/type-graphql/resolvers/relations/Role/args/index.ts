@@ -1,0 +1,1 @@
+export { RoleAdmistratorsArgs } from "./RoleAdmistratorsArgs";
