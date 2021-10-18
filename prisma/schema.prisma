@@ -12,7 +12,7 @@ generator client {
 
 generator typegraphql {
   provider = "typegraphql-prisma"
-  output   = "../src/generated/type-graphql"
+  output   = "../src/shared/generated/type-graphql"
 }
 
 //######################################################################
@@ -26,57 +26,58 @@ generator typegraphql {
 //######################################################################
 
 model Role {
-  id            String                @id @default(cuid()) @map("_id")
-  name          String?               @db.VarChar(255)
-  admistrators  RolesAdministrators[]
-  canQueryUsers Boolean?              @default(false) @map("can_query_users")
-  canCrudUsers  Boolean?              @default(false) @map("can_crud_users")
-  canQueryRoles Boolean?              @default(false) @map("can_query_roles")
-  canCrudRoles  Boolean?              @default(false) @map("can_crud_roles")
-  canQueryPosts Boolean?              @default(false) @map("can_query_posts")
-  canCrudPosts  Boolean?              @default(false) @map("can_crud_posts")
-  createdAt     DateTime?             @default(now()) @map("created_at")
-  modifiedAt    DateTime?             @default(now()) @map("modified_at")
-  deletedAt     DateTime?             @default(now()) @map("deleted_at")
+  id            String                       @id @default(cuid()) @map("_id")
+  name          String                       @db.VarChar(255)
+  admistrators  RolesAdministratorsMapping[]
+  canQueryUsers Boolean                      @default(false) @map("can_query_users")
+  canCrudUsers  Boolean                      @default(false) @map("can_crud_users")
+  canQueryRoles Boolean                      @default(false) @map("can_query_roles")
+  canCrudRoles  Boolean                      @default(false) @map("can_crud_roles")
+  canQueryPosts Boolean                      @default(false) @map("can_query_posts")
+  canCrudPosts  Boolean                      @default(false) @map("can_crud_posts")
+  createdAt     DateTime                     @default(now()) @map("created_at")
+  modifiedAt    DateTime                     @default(now()) @map("modified_at")
+  deletedAt     DateTime                     @default(now()) @map("deleted_at")
 
   @@map("roles")
 }
 
 model User {
-  id         String                @id @default(cuid()) @map("_id")
-  firstName  String?               @map("first_name") @db.VarChar(100)
-  lastName   String?               @map("last_name") @db.VarChar(100)
-  email      String?               @unique @db.VarChar(100)
+  id         String                       @id @default(cuid()) @map("_id")
+  firstName  String                       @map("first_name") @db.VarChar(100)
+  lastName   String                       @map("last_name") @db.VarChar(100)
+  email      String                       @unique @db.VarChar(100)
+  confirmed  Boolean                      @default(false)
   /// @TypeGraphQL.omit(output: true)
-  password   String?
-  posts      PostsUsers[]
-  roles      RolesAdministrators[]
-  createdAt  DateTime?             @default(now()) @map("created_at")
-  modifiedAt DateTime?             @default(now()) @map("modified_at")
-  deletedAt  DateTime?             @default(now()) @map("deleted_at")
+  password   String
+  posts      PostsUsersMapping[]
+  roles      RolesAdministratorsMapping[]
+  createdAt  DateTime                     @default(now()) @map("created_at")
+  modifiedAt DateTime                     @default(now()) @map("modified_at")
+  deletedAt  DateTime                     @default(now()) @map("deleted_at")
 
   @@map("users")
 }
 
 model Post {
-  id             String            @id @default(cuid()) @map("_id")
-  title          String?           @db.VarChar(255)
-  description    String?           @db.VarChar(255)
-  users          PostsUsers[]
-  catagories     CatagoriesPosts[]
-  mainCatagory   Catagory          @relation(fields: [mainCatagoryId], references: [id])
-  mainCatagoryId String            @map("main_catagory_id")
+  id             String                   @id @default(cuid()) @map("_id")
+  title          String                   @db.VarChar(255)
+  description    String                   @db.VarChar(255)
+  users          PostsUsersMapping[]
+  catagories     CatagoriesPostsMapping[]
+  mainCatagory   Catagory                 @relation(fields: [mainCatagoryId], references: [id])
+  mainCatagoryId String                   @map("main_catagory_id")
 
   @@map("posts")
 }
 
 model Catagory {
-  id                String            @id @default(cuid()) @map("_id")
-  name              String            @unique @db.VarChar(50)
+  id                String                   @id @default(cuid()) @map("_id")
+  name              String                   @unique @db.VarChar(50)
   mainCatagoryPosts Post[]
-  posts             CatagoriesPosts[]
-  createdAt         DateTime?         @default(now()) @map("created_at")
-  modifiedAt        DateTime?         @default(now()) @map("modified_at")
+  posts             CatagoriesPostsMapping[]
+  createdAt         DateTime                 @default(now()) @map("created_at")
+  modifiedAt        DateTime                 @default(now()) @map("modified_at")
 
   @@map("catagories")
 }
@@ -87,31 +88,34 @@ model Catagory {
 //#####################################################
 //#####################################################
 
-model RolesAdministrators {
-  role            Role   @relation(fields: [roleId], references: [id])
-  roleId          String @map("role_id")
-  user            User   @relation(fields: [administratorId], references: [id])
-  administratorId String @map("user_id")
+model RolesAdministratorsMapping {
+  role            Role    @relation(fields: [roleId], references: [id])
+  roleId          String  @map("role_id")
+  user            User    @relation(fields: [administratorId], references: [id])
+  administratorId String  @map("user_id")
+  dummy           String?
 
   @@id([roleId, administratorId])
   @@map("roles_users")
 }
 
-model PostsUsers {
-  post   Post   @relation(fields: [postId], references: [id])
-  postId String @map("post_id")
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
+model PostsUsersMapping {
+  post   Post    @relation(fields: [postId], references: [id])
+  postId String  @map("post_id")
+  user   User    @relation(fields: [userId], references: [id])
+  userId String  @map("user_id")
+  dummy  String?
 
   @@id([postId, userId])
   @@map("posts_users")
 }
 
-model CatagoriesPosts {
+model CatagoriesPostsMapping {
   catagory   Catagory @relation(fields: [catagoryId], references: [id])
   catagoryId String   @map("catagory_id")
   post       Post     @relation(fields: [postId], references: [id])
   postId     String   @map("post_id")
+  dummy      String?
 
   @@id([catagoryId, postId])
   @@map("catagories_posts")

@@ -7,7 +7,11 @@ import express from "express";
 import http from "http";
 import { buildSchema } from "type-graphql";
 import cors, { CorsOptions } from "cors";
+import session from "express-session";
+import connectRedis from "connect-redis";
+
 import { queryComplexityRule } from "./utils/queryComplexityRule";
+import { RegisterResolver } from "./modules/user/register";
 
 //###############   End of imports   ######################
 //#########################################################
@@ -18,7 +22,7 @@ const schemaSDLPath = path.resolve(
   "schema",
   "schema.gql"
 );
-const resolversPath = path.resolve(__dirname, "modules", "**", "*.ts");
+const resolversModuleDirPath = path.resolve(__dirname, "modules", "**", "*.ts");
 
 const corsOption: CorsOptions = {
   credentials: true,
@@ -34,7 +38,8 @@ const corsOption: CorsOptions = {
 
 async function startApolloServer() {
   const schema = await buildSchema({
-    resolvers: [resolversPath],
+    resolvers: [RegisterResolver], // Using this emit expected resolvers
+    // resolvers: [__dirname + "/modules/**/*.ts"], Using this emit unexpectedly all resolvers and types from generated type-graphql via typegraphql-prisma
     emitSchemaFile: schemaSDLPath,
   });
 
@@ -51,6 +56,7 @@ async function startApolloServer() {
   //    MOUNT APOLLO MIDDLEWARE HERE
   //#######################################
   app.use(cors(corsOption));
+  // app.use(session);
 
   //#######################################
   //   XXXX   END OF MIDDLWARE    XXXX
