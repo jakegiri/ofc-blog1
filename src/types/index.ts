@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { Request, Response } from "express";
 import { Redis } from "ioredis";
 import { User } from "../shared/generated/type-graphql";
 
@@ -9,9 +10,11 @@ declare module "express-session" {
 }
 
 export interface MyContext {
+  req: Request;
+  res: Response;
   prisma: PrismaClient;
   redis: Redis;
-  session: MySession;
+  mySession: MySession;
 }
 
 export class MySession implements Partial<User> {

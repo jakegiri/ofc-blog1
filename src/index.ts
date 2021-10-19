@@ -15,6 +15,7 @@ import { buildSchema } from "type-graphql";
 import redis from "./clients/redisClient";
 import { context } from "./context";
 import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
+import { LoginResolver } from "./modules/user/Login";
 import { RegisterResolver } from "./modules/user/Register";
 import { queryComplexityRule } from "./utils/queryComplexityRule";
 
@@ -53,6 +54,14 @@ const graphQLPlaygroundPlugin =
     ? ApolloServerPluginLandingPageDisabled()
     : ApolloServerPluginLandingPageGraphQLPlayground();
 
+const schemaHelper = async () => {
+  const schemad = await buildSchema({
+    resolvers: [RegisterResolver, ConfirmUserResolver, LoginResolver], // Using this emit expected resolvers
+    // resolvers: [__dirname + "/modules/**/*.ts"], Using this emit unexpectedly all resolvers and types from generated type-graphql via typegraphql-prisma
+    emitSchemaFile: schemaSDLPath,
+  });
+};
+
 //#########################################################################
 //#########################################################################
 //#############          (MAIN FUNCTION)             ######################
@@ -62,7 +71,7 @@ const graphQLPlaygroundPlugin =
 
 async function startApolloServer() {
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, ConfirmUserResolver], // Using this emit expected resolvers
+    resolvers: [RegisterResolver, ConfirmUserResolver, LoginResolver], // Using this emit expected resolvers
     // resolvers: [__dirname + "/modules/**/*.ts"], Using this emit unexpectedly all resolvers and types from generated type-graphql via typegraphql-prisma
     emitSchemaFile: schemaSDLPath,
   });
@@ -87,7 +96,7 @@ async function startApolloServer() {
   app.use(session(sessionOptions));
 
   //#######################################
-  //   XXXX   END OF MIDDLWARE    XXXX
+  //  ---X---   END OF MIDDLWARE   ---X---
   //#######################################
 
   apolloServer.applyMiddleware({ app, cors: false });

@@ -27,5 +27,6 @@ export const context = async ({ req, res }: Params) => {
     };
   }
   console.log("session: ", mySession);
-  return { prisma: prisma, redis: redis, session: mySession };
+
+  return { req, res, prisma, redis, mySession };
 };
