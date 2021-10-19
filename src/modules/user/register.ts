@@ -2,7 +2,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import bcrypt from "bcryptjs";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../../shared/generated/type-graphql";
-import { MyContext } from "../../types/MyContext";
+import { MyContext } from "../../types";
 import { createConfirmationUrl } from "../../utils/createUserConfirmationUrl";
 import { sendEmail } from "../../utils/sendEmail";
 import { RegisterInputs } from "./register/RegisterInputs";

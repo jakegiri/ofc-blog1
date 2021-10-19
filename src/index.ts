@@ -1,24 +1,22 @@
-import path from "path";
-
-import "reflect-metadata";
-import { ApolloServer } from "apollo-server-express";
 import {
   ApolloServerPluginDrainHttpServer,
   ApolloServerPluginLandingPageDisabled,
   ApolloServerPluginLandingPageGraphQLPlayground,
 } from "apollo-server-core";
-import express from "express";
-import http from "http";
-import { buildSchema } from "type-graphql";
-import cors, { CorsOptions } from "cors";
+import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
-
-import redis from "./clients/redisClient";
-import prisma from "./clients/prismaClient";
-import { queryComplexityRule } from "./utils/queryComplexityRule";
-import { RegisterResolver } from "./modules/user/Register";
-import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
+import cors, { CorsOptions } from "cors";
+import express from "express";
 import session, { SessionOptions } from "express-session";
+import http from "http";
+import path from "path";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
+import redis from "./clients/redisClient";
+import { context } from "./context";
+import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
+import { RegisterResolver } from "./modules/user/Register";
+import { queryComplexityRule } from "./utils/queryComplexityRule";
 
 //###############   End of imports   ######################
 //#########################################################
@@ -78,7 +76,7 @@ async function startApolloServer() {
       graphQLPlaygroundPlugin,
     ],
     validationRules: [queryComplexityRule],
-    context: ({ req, res }) => ({ prisma: prisma, redis: redis }),
+    context: context,
   });
   await apolloServer.start();
 

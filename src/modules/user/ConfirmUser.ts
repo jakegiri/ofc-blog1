@@ -1,7 +1,6 @@
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
-
 import { confirmationPrefix } from "../../constants/redisPrefixes";
-import { MyContext } from "../../types/MyContext";
+import { MyContext } from "../../types/";
 
 @Resolver()
 export class ConfirmUserResolver {
