@@ -1,29 +1,27 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
-import bcrypt from "bcryptjs";
-import { v4 } from "uuid";
-
-import { User } from "../../shared/generated/type-graphql";
-import prisma from "../../clients/prismaClient";
-import { RegisterInputs } from "./register/RegisterInputs";
-import { sendEmail } from "../../utils/sendEmail";
-import { confirmationPrefix } from "../../constants/redisPrefixes";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import redis from "../../clients/redisClient";
+import bcrypt from "bcryptjs";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { User } from "../../shared/generated/type-graphql";
+import { MyContext } from "../../types/MyContext";
+import { createConfirmationUrl } from "../../utils/createUserConfirmationUrl";
+import { sendEmail } from "../../utils/sendEmail";
+import { RegisterInputs } from "./register/RegisterInputs";
 
-async function createConfirmationUrl(userId: string): Promise<string> {
-  const token = v4();
-  await redis.set(confirmationPrefix + token, userId, "ex", 60 * 60 * 60 * 24); // 1day expiratino
-  return `http://localhost:4000/user/confirm/${token}`;
-}
-
-function errorHandler(err: any) {
+function errorHandler(err: any): never {
   // USER ALREADY EXIST ERROR
   if (err instanceof PrismaClientKnownRequestError && err.code === "P2002") {
     throw new Error(
       "User already exist for this email. Please try to login with different email"
     );
   }
+  throw err; //REST ERRORS
 }
+
+//#######################################################
+//#######################################################
+//###########         MAIN          #####################
+//#######################################################
+//#######################################################
 
 @Resolver()
 export class RegisterResolver {
@@ -34,7 +32,8 @@ export class RegisterResolver {
 
   @Mutation(() => User, { nullable: true })
   async register(
-    @Arg("data") { firstName, lastName, email, password }: RegisterInputs
+    @Arg("data") { firstName, lastName, email, password }: RegisterInputs,
+    @Ctx() ctx: MyContext
   ): Promise<User | null> {
     //data for user creation
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -47,14 +46,11 @@ export class RegisterResolver {
 
     // TRY (CREATING USER) CATCH (IF USER EXISTS)
     try {
-      const user = await prisma.user.create({ data: dataForUserCreation });
+      const user = await ctx.prisma.user.create({ data: dataForUserCreation });
       await sendEmail(email, await createConfirmationUrl(user.id));
       return user;
     } catch (err) {
-      // IF USER ALREADY EXIST ERROR
-      errorHandler(err);
-      //REST ERRORS
-      throw err;
+      errorHandler(err); // IF USER ALREADY EXIST ERROR
     }
   }
 }
