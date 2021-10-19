@@ -35,15 +35,20 @@ export class RegisterResolver {
     @Arg("data") { firstName, lastName, email, password }: RegisterInputs,
     @Ctx() ctx: MyContext
   ): Promise<User | null> {
-    //data for user creation
+    // THROW ERROR IF USER IS ALREADY LOGGED IN
+    if (ctx.session)
+      throw new Error(
+        "You're already logged in. Logout before doing new user registration"
+      );
+    // HASHED PASSWORD
     const hashedPassword = await bcrypt.hash(password, 12);
+    // DATA FOR USER CREATION
     const dataForUserCreation = {
       firstName,
       lastName,
       email,
       password: hashedPassword,
     };
-
     // TRY (CREATING USER) CATCH (IF USER EXISTS)
     try {
       const user = await ctx.prisma.user.create({ data: dataForUserCreation });

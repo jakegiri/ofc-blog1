@@ -11,6 +11,7 @@ declare module "express-session" {
 export interface MyContext {
   prisma: PrismaClient;
   redis: Redis;
+  session: MySession;
 }
 
 export class MySession implements Partial<User> {
