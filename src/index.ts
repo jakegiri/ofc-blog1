@@ -71,8 +71,7 @@ const schemaHelper = async () => {
 
 async function startApolloServer() {
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, ConfirmUserResolver, LoginResolver], // Using this emit expected resolvers
-    // resolvers: [__dirname + "/modules/**/*.ts"], Using this emit unexpectedly all resolvers and types from generated type-graphql via typegraphql-prisma
+    resolvers: [RegisterResolver, ConfirmUserResolver, LoginResolver],
     emitSchemaFile: schemaSDLPath,
   });
 
