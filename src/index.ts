@@ -84,7 +84,7 @@ async function startApolloServer() {
       graphQLPlaygroundPlugin,
     ],
     validationRules: [queryComplexityRule],
-    context: ({ req, res }) => context,
+    context: context,
   });
   await apolloServer.start();
 
