@@ -16,6 +16,7 @@ import redis from "./clients/redisClient";
 import { context } from "./context";
 import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 import { LoginResolver } from "./modules/user/Login";
+import { LogoutResolver } from "./modules/user/LogoutResolver";
 import { RegisterResolver } from "./modules/user/Register";
 import { queryComplexityRule } from "./utils/queryComplexityRule";
 
@@ -54,24 +55,27 @@ const graphQLPlaygroundPlugin =
     ? ApolloServerPluginLandingPageDisabled()
     : ApolloServerPluginLandingPageGraphQLPlayground();
 
-const schemaHelper = async () => {
-  const schemad = await buildSchema({
-    resolvers: [RegisterResolver, ConfirmUserResolver, LoginResolver], // Using this emit expected resolvers
-    // resolvers: [__dirname + "/modules/**/*.ts"], Using this emit unexpectedly all resolvers and types from generated type-graphql via typegraphql-prisma
-    emitSchemaFile: schemaSDLPath,
-  });
-};
+const resolvers = [
+  RegisterResolver,
+  ConfirmUserResolver,
+  LoginResolver,
+  LogoutResolver,
+] as const;
 
-//#########################################################################
-//#########################################################################
-//#############          (MAIN FUNCTION)             ######################
-//#############        -startApolloServer-           ######################
-//#########################################################################
-//#########################################################################
+//#################################################################################
+//#################################################################################
+//#################################################################################
+//#################                                      ##########################
+//#################          (MAIN FUNCTION)             ##########################
+//#################        -startApolloServer-           ##########################
+//#################                                      ##########################
+//#################################################################################
+//#################################################################################
+//#################################################################################
 
 async function startApolloServer() {
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, ConfirmUserResolver, LoginResolver],
+    resolvers,
     emitSchemaFile: schemaSDLPath,
   });
 
