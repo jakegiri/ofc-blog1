@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { Redis } from "ioredis";
-import { User } from "../shared/generated/type-graphql";
 
 declare module "express-session" {
   interface SessionData {
     userId: string;
+    data: MySession;
   }
 }
 
@@ -17,8 +17,8 @@ export interface MyContext {
   mySession: MySession;
 }
 
-export class MySession implements Partial<User> {
-  userId!: string;
+export class MySession {
+  userId?: string;
   firstName!: string;
   lastName!: string;
   email!: string;

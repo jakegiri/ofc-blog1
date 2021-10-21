@@ -34,7 +34,12 @@ export class LoginResolver {
     if (!user.confirmed) {
       throw new Error("Email Verification not done yet");
     }
-    ctx.req.session = { ...user, userId: user.id };
+    ctx.req.session.data = {
+      userId: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    };
     return user;
   }
 }
