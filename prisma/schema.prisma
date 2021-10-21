@@ -61,24 +61,25 @@ model User {
 }
 
 model Post {
-  id             String                   @id @default(cuid()) @map("_id")
-  title          String                   @db.VarChar(255)
-  description    String                   @db.VarChar(255)
-  users          PostsUsersMapping[]
-  catagories     CatagoriesPostsMapping[]
-  mainCatagory   Catagory                 @relation(fields: [mainCatagoryId], references: [id])
-  mainCatagoryId String                   @map("main_catagory_id")
+  id          String                   @id @default(cuid()) @map("_id")
+  title       String                   @db.VarChar(255)
+  description String                   @db.VarChar(255)
+  content     String                   @db.VarChar(10000)
+  authors     PostsUsersMapping[]
+  catagories  CatagoriesPostsMapping[]
+  createdAt   DateTime                 @default(now()) @map("created_at")
+  modifiedAt  DateTime                 @default(now()) @map("modified_at")
+  deletedAt   DateTime                 @default(now()) @map("deleted_at")
 
   @@map("posts")
 }
 
 model Catagory {
-  id                String                   @id @default(cuid()) @map("_id")
-  name              String                   @unique @db.VarChar(50)
-  mainCatagoryPosts Post[]
-  posts             CatagoriesPostsMapping[]
-  createdAt         DateTime                 @default(now()) @map("created_at")
-  modifiedAt        DateTime                 @default(now()) @map("modified_at")
+  id         String                   @id @default(cuid()) @map("_id")
+  name       String                   @unique @db.VarChar(50)
+  posts      CatagoriesPostsMapping[]
+  createdAt  DateTime                 @default(now()) @map("created_at")
+  modifiedAt DateTime                 @default(now()) @map("modified_at")
 
   @@map("catagories")
 }

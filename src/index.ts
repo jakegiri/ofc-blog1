@@ -14,9 +14,10 @@ import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import redis from "./clients/redisClient";
 import { context } from "./context";
+import { CreatePostResolver } from "./modules/post/CreatePost";
 import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 import { LoginResolver } from "./modules/user/Login";
-import { LogoutResolver } from "./modules/user/LogoutResolver";
+import { LogoutResolver } from "./modules/user/Logout";
 import { RegisterResolver } from "./modules/user/Register";
 import { queryComplexityRule } from "./utils/queryComplexityRule";
 
@@ -60,6 +61,7 @@ const resolvers = [
   ConfirmUserResolver,
   LoginResolver,
   LogoutResolver,
+  CreatePostResolver,
 ] as const;
 
 //#################################################################################
