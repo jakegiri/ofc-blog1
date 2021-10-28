@@ -14,7 +14,9 @@ import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import redis from "./clients/redisClient";
 import { context } from "./context";
+import { CreateCatagoryResolver } from "./modules/catagory/CreateCatagory";
 import { CreatePostResolver } from "./modules/post/CreatePost";
+import { FindManyPostResolver } from "./modules/post/FindManyPostsResolver";
 import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 import { LoginResolver } from "./modules/user/Login";
 import { LogoutResolver } from "./modules/user/Logout";
@@ -33,7 +35,7 @@ const schemaSDLPath = path.resolve(
 
 const corsOptions: CorsOptions = {
   credentials: true,
-  origin: ["http://localhost:4000", "https://studio.apollographql.com"],
+  origin: ["http://localhost:3000", "https://studio.apollographql.com"],
 };
 
 const RedisStore = connectRedis(session);
@@ -62,6 +64,8 @@ const resolvers = [
   LoginResolver,
   LogoutResolver,
   CreatePostResolver,
+  CreateCatagoryResolver,
+  FindManyPostResolver,
 ] as const;
 
 //#################################################################################
