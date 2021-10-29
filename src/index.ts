@@ -15,6 +15,7 @@ import { buildSchema } from "type-graphql";
 import redis from "./clients/redisClient";
 import { context } from "./context";
 import { CreateCatagoryResolver } from "./modules/catagory/CreateCatagory";
+import { CountPostsResolver } from "./modules/post/CountPostsResolver";
 import { CreatePostResolver } from "./modules/post/CreatePost";
 import { FindManyPostResolver } from "./modules/post/FindManyPostsResolver";
 import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
@@ -66,6 +67,7 @@ const resolvers = [
   CreatePostResolver,
   CreateCatagoryResolver,
   FindManyPostResolver,
+  CountPostsResolver,
 ] as const;
 
 //#################################################################################

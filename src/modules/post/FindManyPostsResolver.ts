@@ -8,16 +8,10 @@ export class FindManyPostResolver {
   @Query(() => [Post], { nullable: true })
   async posts(
     @Ctx() ctx: MyContext,
-    @Args()
-    { where, orderBy, cursor, limit, offset, distinct }: FindManyPostArgs
+    @Args() args: FindManyPostArgs
   ): Promise<Post[]> {
-    return await ctx.prisma.post.findMany({
-      where,
-      orderBy,
-      cursor,
-      take: limit,
-      skip: offset,
-      distinct,
-    });
+    const { limit: take, offset: skip, ...rest } = args;
+
+    return await ctx.prisma.post.findMany({ ...rest, skip, take });
   }
 }
