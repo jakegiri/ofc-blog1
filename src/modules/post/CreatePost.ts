@@ -9,7 +9,8 @@ export class CreatePostResolver {
     @Arg("data") data: PostCreateInput,
     @Ctx() ctx: MyContext
   ): Promise<Post> {
-    const post = await ctx.prisma.post.create({ data });
+    const post = ctx.prisma.post.create({ data });
+
     return post;
   }
 }
