@@ -24,8 +24,8 @@ import { LogoutResolver } from "./modules/user/Logout";
 import { RegisterResolver } from "./modules/user/Register";
 import { queryComplexityRule } from "./utils/queryComplexityRule";
 
-//###############   End of imports   ######################
-//#########################################################
+//###############   End of imports   #######################
+//##########################################################
 
 const schemaSDLPath = path.resolve(
   __dirname,
