@@ -7,14 +7,12 @@ datasource db {
 }
 
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "binary"
+  provider = "prisma-client-js"
 }
 
 generator typegraphql {
-  provider   = "typegraphql-prisma"
-  output     = "../src/shared/generated/type-graphql"
-  engineType = "binary"
+  provider = "typegraphql-prisma"
+  output   = "../src/shared/generated/type-graphql"
 }
 
 //######################################################################
